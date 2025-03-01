@@ -1,0 +1,41 @@
+-- Create Users Table
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY IDENTITY(1,1),
+    UserName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(255) NOT NULL UNIQUE,
+    Gender NVARCHAR(10),
+    AutoDate DATETIME DEFAULT GETDATE(),
+    DOS NVARCHAR(50)
+);
+
+-- Create Posts Table
+CREATE TABLE Posts (
+    PostID INT PRIMARY KEY IDENTITY(1,1),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    Content NVARCHAR(MAX) NOT NULL,
+    PostDate DATETIME DEFAULT GETDATE(),
+    Visibility NVARCHAR(50) DEFAULT 'Public',
+    CONSTRAINT CHK_Visibility CHECK (Visibility IN ('Public', 'Private'))
+);
+
+-- Create Comments Table
+CREATE TABLE Comments (
+    CommentID INT PRIMARY KEY IDENTITY(1,1),
+    PostID INT FOREIGN KEY REFERENCES Posts(PostID),
+    UserID INT FOREIGN KEY REFERENCES Users(UserID),
+    Content NVARCHAR(MAX) NOT NULL,
+    CommentDate DATETIME DEFAULT GETDATE()
+);
+
+-- Create Types Table 
+CREATE TABLE Types (
+    TypeID INT PRIMARY KEY IDENTITY(1,1),
+    TypeName NVARCHAR(100) NOT NULL
+);
+
+-- Create PostTypes Table 
+CREATE TABLE PostTypes (
+    PostID INT FOREIGN KEY REFERENCES Posts(PostID),
+    TypeID INT FOREIGN KEY REFERENCES Types(TypeID),
+    PRIMARY KEY (PostID, TypeID)
+);
